@@ -1,0 +1,26 @@
+[package]
+name = "nse_scraper"
+version = "0.1.0"
+edition = "2021"
+authors = ["Your Name <your.email@example.com>"]
+description = "A Rust library for scraping data from the National Stock Exchange (NSE) of India"
+license = "MIT"
+repository = "https://github.com/yourusername/nse-scraper"
+keywords = ["finance", "stock-market", "nse", "scraper", "india"]
+categories = ["api-bindings", "web-programming"]
+
+[dependencies]
+reqwest = { version = "0.11", features = ["json"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "1.0"
+tokio = { version = "1.28", features = ["full"] }
+chrono = "0.4"
+csv = "1.2"
+
+[dev-dependencies]
+tokio-test = "0.4"
+
+[[bin]]
+name = "nse-scraper"
+path = "src/main.rs"
