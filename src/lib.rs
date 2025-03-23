@@ -1,6 +1,5 @@
 // src/lib.rs
 use reqwest::header::{HeaderMap, HeaderValue, USER_AGENT};
-use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
 pub mod models;

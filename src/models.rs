@@ -1,182 +1,300 @@
 // src/models.rs
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 use chrono::NaiveDate;
+
+fn parse_date_string(date_str: &str) -> Option<NaiveDate> {
+    let parts: Vec<&str> = date_str.split('-').collect();
+    if parts.len() != 3 {
+        return None;
+    }
+    
+    let day = parts[0].parse::<u32>().ok()?;
+    let month = parts[1].parse::<u32>().ok()?;
+    let year = parts[2].parse::<i32>().ok()?;
+    
+    NaiveDate::from_ymd_opt(year, month, day)
+}
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct QuoteData {
     pub info: StockInfo,
-    pub priceInfo: PriceInfo,
-    pub securityInfo: SecurityInfo,
+    #[serde(rename = "priceInfo")]
+    pub price_info: PriceInfo,
+    #[serde(rename = "securityInfo")]
+    pub security_info: SecurityInfo,
     pub metadata: Metadata,
     #[serde(rename = "marketDeptOrderBook")]
     pub market_depth: MarketDepth,
-    pub tradingInfo: TradingInfo,
+    #[serde(rename = "tradingInfo")]
+    pub trading_info: TradingInfo,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct StockInfo {
+    #[serde(rename = "symbol")]
     pub symbol: String,
-    pub companyName: String,
+    #[serde(rename = "companyName")]
+    pub company_name: String,
+    #[serde(rename = "industry")]
     pub industry: Option<String>,
-    pub activeSeries: Vec<String>,
-    pub debtSeries: Vec<String>,
-    pub isFNOSec: bool,
-    pub isCASec: bool,
-    pub isSLBSec: bool,
-    pub isDebtSec: bool,
-    pub isSuspended: bool,
-    pub isETFSec: bool,
-    pub isDelisted: bool,
+    #[serde(rename = "activeSeries")]
+    pub active_series: Vec<String>,
+    #[serde(rename = "debtSeries")]
+    pub debt_series: Vec<String>,
+    #[serde(rename = "isFNOSec")]
+    pub is_fno_sec: bool,
+    #[serde(rename = "isCASec")]
+    pub is_ca_sec: bool,
+    #[serde(rename = "isSLBSec")]
+    pub is_slb_sec: bool,
+    #[serde(rename = "isDebtSec")]
+    pub is_debt_sec: bool,
+    #[serde(rename = "isSuspended")]
+    pub is_suspended: bool,
+    #[serde(rename = "isETFSec")]
+    pub is_etf_sec: bool,
+    #[serde(rename = "isDelisted")]
+    pub is_delisted: bool,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PriceInfo {
-    pub lastPrice: f64,
+    #[serde(rename = "lastPrice")]
+    pub last_price: f64,
+    #[serde(rename = "change")]
     pub change: f64,
-    pub pChange: f64,
-    pub previousClose: f64,
+    #[serde(rename = "pChange")]
+    pub p_change: f64,
+    #[serde(rename = "previousClose")]
+    pub previous_close: f64,
+    #[serde(rename = "open")]
     pub open: f64,
+    #[serde(rename = "close")]
     pub close: Option<f64>,
+    #[serde(rename = "vwap")]
     pub vwap: f64,
-    pub lowerCP: Option<String>,
-    pub upperCP: Option<String>,
-    pub pPriceBand: String,
-    pub basePrice: f64,
-    pub intraDayHighLow: IntraDayHighLow,
-    pub weekHighLow: WeekHighLow,
+    #[serde(rename = "lowerCP")]
+    pub lower_cp: Option<String>,
+    #[serde(rename = "upperCP")]
+    pub upper_cp: Option<String>,
+    #[serde(rename = "pPriceBand")]
+    pub p_price_band: String,
+    #[serde(rename = "basePrice")]
+    pub base_price: f64,
+    #[serde(rename = "intraDayHighLow")]
+    pub intra_day_high_low: IntraDayHighLow,
+    #[serde(rename = "weekHighLow")]
+    pub week_high_low: WeekHighLow,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct IntraDayHighLow {
+    #[serde(rename = "min")]
     pub min: f64,
+    #[serde(rename = "max")]
     pub max: f64,
+    #[serde(rename = "value")]
     pub value: Option<f64>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct WeekHighLow {
+    #[serde(rename = "min")]
     pub min: f64,
+    #[serde(rename = "max")]
     pub max: f64,
-    pub minDate: String,
-    pub maxDate: String,
+    #[serde(rename = "minDate")]
+    pub min_date: String,
+    #[serde(rename = "maxDate")]
+    pub max_date: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SecurityInfo {
-    pub boardStatus: String,
-    pub tradingStatus: String,
-    pub tradingSegment: String,
-    pub sessionNo: String,
+    #[serde(rename = "boardStatus")]
+    pub board_status: String,
+    #[serde(rename = "tradingStatus")]
+    pub trading_status: String,
+    #[serde(rename = "tradingSegment")]
+    pub trading_segment: String,
+    #[serde(rename = "sessionNo")]
+    pub session_no: String,
+    #[serde(rename = "slb")]
     pub slb: String,
-    pub classOfShare: String,
+    #[serde(rename = "classOfShare")]
+    pub class_of_share: String,
+    #[serde(rename = "derivatives")]
     pub derivatives: String,
+    #[serde(rename = "surveillance")]
     pub surveillance: String,
-    pub faceValue: f64,
-    pub issuedSize: u64,
+    #[serde(rename = "faceValue")]
+    pub face_value: f64,
+    #[serde(rename = "issuedSize")]
+    pub issued_size: u64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Metadata {
+    #[serde(rename = "series")]
     pub series: String,
+    #[serde(rename = "symbol")]
     pub symbol: String,
+    #[serde(rename = "isin")]
     pub isin: String,
+    #[serde(rename = "status")]
     pub status: String,
-    pub listingDate: String,
+    #[serde(rename = "listingDate")]
+    pub listing_date: String,
+    #[serde(rename = "industry")]
     pub industry: String,
-    pub lastUpdateTime: String,
-    pub pdSectorInd: String,
-    pub pdSectorPe: f64,
+    #[serde(rename = "lastUpdateTime")]
+    pub last_update_time: String,
+    #[serde(rename = "pdSectorInd")]
+    pub pd_sector_ind: String,
+    #[serde(rename = "pdSectorPe")]
+    pub pd_sector_pe: f64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct MarketDepth {
+    #[serde(rename = "buy")]
     pub buy: Vec<DepthOrder>,
+    #[serde(rename = "sell")]
     pub sell: Vec<DepthOrder>,
-    pub tradeInfo: TradeInfo,
+    #[serde(rename = "tradeInfo")]
+    pub trade_info: TradeInfo,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DepthOrder {
+    #[serde(rename = "price")]
     pub price: f64,
+    #[serde(rename = "quantity")]
     pub quantity: u32,
+    #[serde(rename = "orders")]
     pub orders: u32,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TradeInfo {
-    pub totalBuyQuantity: u64,
-    pub totalSellQuantity: u64,
-    pub totalTradedValue: f64,
-    pub totalTradedVolume: u64,
+    #[serde(rename = "totalBuyQuantity")]
+    pub total_buy_quantity: u64,
+    #[serde(rename = "totalSellQuantity")]
+    pub total_sell_quantity: u64,
+    #[serde(rename = "totalTradedValue")]
+    pub total_traded_value: f64,
+    #[serde(rename = "totalTradedVolume")]
+    pub total_traded_volume: u64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TradingInfo {
-    pub totalTradedVolume: u64,
-    pub totalTradedValue: f64,
-    pub totalMarketCap: f64,
+    #[serde(rename = "totalTradedVolume")]
+    pub total_traded_volume: u64,
+    #[serde(rename = "totalTradedValue")]
+    pub total_traded_value: f64,
+    #[serde(rename = "totalMarketCap")]
+    pub total_market_cap: f64,
+    #[serde(rename = "ffmc")]
     pub ffmc: f64,
+    #[serde(rename = "impact")]
     pub impact: f64,
-    pub deliveryQuantity: Option<u64>,
-    pub deliveryPercentage: Option<f64>,
-    pub deliveryToTradedQuantity: Option<f64>,
-    pub varMargin: Option<f64>,
-    pub marketLot: u32,
+    #[serde(rename = "deliveryQuantity")]
+    pub delivery_quantity: Option<u64>,
+    #[serde(rename = "deliveryPercentage")]
+    pub delivery_percentage: Option<f64>,
+    #[serde(rename = "deliveryToTradedQuantity")]
+    pub delivery_to_traded_quantity: Option<f64>,
+    #[serde(rename = "varMargin")]
+    pub var_margin: Option<f64>,
+    #[serde(rename = "marketLot")]
+    pub market_lot: u32,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct MarketStatus {
-    pub marketState: Vec<MarketSegmentState>,
-    pub lastUpdateTime: String,
+    #[serde(rename = "marketState")]
+    pub market_state: Vec<MarketSegmentState>,
+    #[serde(rename = "lastUpdateTime")]
+    pub last_update_time: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct MarketSegmentState {
+    #[serde(rename = "market")]
     pub market: String,
-    pub marketStatus: String,
-    pub tradeDate: String,
+    #[serde(rename = "marketStatus")]
+    pub market_status: String,
+    #[serde(rename = "tradeDate")]
+    pub trade_date: String,
+    #[serde(rename = "index")]
     pub index: Option<String>,
+    #[serde(rename = "last")]
     pub last: Option<f64>,
+    #[serde(rename = "variation")]
     pub variation: Option<f64>,
-    pub percentChange: Option<f64>,
+    #[serde(rename = "percentChange")]
+    pub percent_change: Option<f64>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct IndicesData {
+    #[serde(rename = "data")]
     pub data: Vec<IndexData>,
+    #[serde(rename = "timestamp")]
     pub timestamp: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct IndexData {
+    #[serde(rename = "key")]
     pub key: String,
+    #[serde(rename = "index")]
     pub index: String,
-    pub indexSymbol: String,
+    #[serde(rename = "indexSymbol")]
+    pub index_symbol: String,
+    #[serde(rename = "last")]
     pub last: f64,
+    #[serde(rename = "variation")]
     pub variation: f64,
-    pub percentChange: f64,
+    #[serde(rename = "percentChange")]
+    pub percent_change: f64,
+    #[serde(rename = "open")]
     pub open: f64,
+    #[serde(rename = "high")]
     pub high: f64,
+    #[serde(rename = "low")]
     pub low: f64,
-    pub previousClose: f64,
-    pub yearHigh: f64,
-    pub yearLow: f64,
+    #[serde(rename = "previousClose")]
+    pub previous_close: f64,
+    #[serde(rename = "yearHigh")]
+    pub year_high: f64,
+    #[serde(rename = "yearLow")]
+    pub year_low: f64,
+    #[serde(rename = "pe")]
     pub pe: Option<f64>,
+    #[serde(rename = "pb")]
     pub pb: Option<f64>,
+    #[serde(rename = "dy")]
     pub dy: Option<f64>,
+    #[serde(rename = "declines")]
     pub declines: Option<u32>,
+    #[serde(rename = "advances")]
     pub advances: Option<u32>,
+    #[serde(rename = "unchanged")]
     pub unchanged: Option<u32>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct HistoricalData {
+    #[serde(rename = "symbol")]
     pub symbol: String,
+    #[serde(rename = "data")]
     pub data: Vec<DailyData>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+// Update the DailyData struct definition
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct DailyData {
     #[serde(rename = "CH_TIMESTAMP")]
     pub timestamp: String,
@@ -258,41 +376,67 @@ impl TimeFrame {
 // New struct for consolidated data after time frame conversion
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TimeFrameData {
+    #[serde(rename = "date")]
     pub date: String,
+    #[serde(rename = "open")]
     pub open: f64,
+    #[serde(rename = "high")]
     pub high: f64,
+    #[serde(rename = "low")]
     pub low: f64,
+    #[serde(rename = "close")]
     pub close: f64,
+    #[serde(rename = "volume")]
     pub volume: u64,
+    #[serde(rename = "value")]
     pub value: f64,
 }
 
 // New struct for technical indicators
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TechnicalIndicators {
+    #[serde(rename = "date")]
     pub date: String,
+    #[serde(rename = "rsi_14")]
     pub rsi_14: Option<f64>,
+    #[serde(rename = "sma_20")]
     pub sma_20: Option<f64>,
+    #[serde(rename = "sma_50")]
     pub sma_50: Option<f64>,
+    #[serde(rename = "sma_200")]
     pub sma_200: Option<f64>,
+    #[serde(rename = "ema_12")]
     pub ema_12: Option<f64>,
+    #[serde(rename = "ema_26")]
     pub ema_26: Option<f64>,
+    #[serde(rename = "macd")]
     pub macd: Option<f64>,
+    #[serde(rename = "macd_signal")]
     pub macd_signal: Option<f64>,
+    #[serde(rename = "macd_histogram")]
     pub macd_histogram: Option<f64>,
+    #[serde(rename = "bollinger_upper")]
     pub bollinger_upper: Option<f64>,
+    #[serde(rename = "bollinger_middle")]
     pub bollinger_middle: Option<f64>,
+    #[serde(rename = "bollinger_lower")]
     pub bollinger_lower: Option<f64>,
 }
 
 // New struct for consolidated data with technical indicators
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ConsolidatedData {
+    #[serde(rename = "symbol")]
     pub symbol: String,
+    #[serde(rename = "timeFrame")]
     pub time_frame: String,
+    #[serde(rename = "fromDate")]
     pub from_date: String,
+    #[serde(rename = "toDate")]
     pub to_date: String,
+    #[serde(rename = "data")]
     pub data: Vec<TimeFrameData>,
+    #[serde(rename = "indicators")]
     pub indicators: Option<Vec<TechnicalIndicators>>,
 }
 
@@ -335,6 +479,17 @@ impl HistoricalData {
         }
     }
     
+    fn prepare_sorted_data(&self) -> Vec<DailyData> {
+        let mut sorted_data = self.data.clone();
+        sorted_data.sort_by(|a, b| {
+            let date_a = parse_date_string(&a.timestamp);
+            let date_b = parse_date_string(&b.timestamp);
+            
+            date_a.cmp(&date_b)
+        });
+        sorted_data
+    }
+
     fn to_weekly(&self) -> ConsolidatedData {
         let mut weekly_data = Vec::new();
         if self.data.is_empty() {
@@ -349,27 +504,11 @@ impl HistoricalData {
         }
         
         // Sort data by date
-        let mut sorted_data = self.data.clone();
-        sorted_data.sort_by(|a, b| {
-            // Parse dates like "01-01-2024"
-            let parse_date = |date_str: &str| -> Option<NaiveDate> {
-                let parts: Vec<&str> = date_str.split('-').collect();
-                if parts.len() != 3 {
-                    return None;
-                }
-                
-                let day = parts[0].parse::<u32>().ok()?;
-                let month = parts[1].parse::<u32>().ok()?;
-                let year = parts[2].parse::<i32>().ok()?;
-                
-                NaiveDate::from_ymd_opt(year, month, day)
-            };
-            
-            let date_a = parse_date(&a.timestamp);
-            let date_b = parse_date(&b.timestamp);
-            
-            date_a.cmp(&date_b)
-        });
+        let sorted_data = self.prepare_sorted_data();
+        
+        // Get date range - make sure to capture this before consuming sorted_data
+        let from_date = sorted_data.first().map(|d| d.timestamp.clone()).unwrap_or_default();
+        let to_date = sorted_data.last().map(|d| d.timestamp.clone()).unwrap_or_default();
         
         // Group by week
         let mut current_week: Option<(TimeFrameData, NaiveDate)> = None;
@@ -438,10 +577,6 @@ impl HistoricalData {
             weekly_data.push(week_data);
         }
         
-        // Get date range
-        let from_date = sorted_data.first().map(|d| d.timestamp.clone()).unwrap_or_default();
-        let to_date = sorted_data.last().map(|d| d.timestamp.clone()).unwrap_or_default();
-        
         ConsolidatedData {
             symbol: self.symbol.clone(),
             time_frame: "weekly".to_string(),
@@ -466,27 +601,11 @@ impl HistoricalData {
         }
         
         // Sort data by date
-        let mut sorted_data = self.data.clone();
-        sorted_data.sort_by(|a, b| {
-            // Parse dates like "01-01-2024"
-            let parse_date = |date_str: &str| -> Option<NaiveDate> {
-                let parts: Vec<&str> = date_str.split('-').collect();
-                if parts.len() != 3 {
-                    return None;
-                }
-                
-                let day = parts[0].parse::<u32>().ok()?;
-                let month = parts[1].parse::<u32>().ok()?;
-                let year = parts[2].parse::<i32>().ok()?;
-                
-                NaiveDate::from_ymd_opt(year, month, day)
-            };
-            
-            let date_a = parse_date(&a.timestamp);
-            let date_b = parse_date(&b.timestamp);
-            
-            date_a.cmp(&date_b)
-        });
+        let sorted_data = self.prepare_sorted_data();
+        
+        // Get date range - make sure to capture this before consuming sorted_data
+        let from_date = sorted_data.first().map(|d| d.timestamp.clone()).unwrap_or_default();
+        let to_date = sorted_data.last().map(|d| d.timestamp.clone()).unwrap_or_default();
         
         // Group by month
         let mut current_month: Option<(TimeFrameData, (u32, i32))> = None;
@@ -498,9 +617,9 @@ impl HistoricalData {
                 continue;
             }
             
-            let day_val = parts[0].parse::<u32>().unwrap_or(1);
-            let month = parts[1].parse::<u32>().unwrap_or(1);
-            let year = parts[2].parse::<i32>().unwrap_or(2023);
+            let _day_val = parts[0].parse::<u32>().unwrap_or_default();
+            let month = parts[1].parse::<u32>().unwrap_or_default();
+            let year = parts[2].parse::<i32>().unwrap_or_default();
             
             match &mut current_month {
                 None => {
@@ -552,10 +671,6 @@ impl HistoricalData {
             monthly_data.push(month_data);
         }
         
-        // Get date range
-        let from_date = sorted_data.first().map(|d| d.timestamp.clone()).unwrap_or_default();
-        let to_date = sorted_data.last().map(|d| d.timestamp.clone()).unwrap_or_default();
-        
         ConsolidatedData {
             symbol: self.symbol.clone(),
             time_frame: "monthly".to_string(),
@@ -574,21 +689,8 @@ impl HistoricalData {
         
         // Sort data by date
         self.data.sort_by(|a, b| {
-            let parse_date = |date_str: &str| -> Option<NaiveDate> {
-                let parts: Vec<&str> = date_str.split('-').collect();
-                if parts.len() != 3 {
-                    return None;
-                }
-                
-                let day = parts[0].parse::<u32>().ok()?;
-                let month = parts[1].parse::<u32>().ok()?;
-                let year = parts[2].parse::<i32>().ok()?;
-                
-                NaiveDate::from_ymd_opt(year, month, day)
-            };
-            
-            let date_a = parse_date(&a.timestamp);
-            let date_b = parse_date(&b.timestamp);
+            let date_a = parse_date_string(&a.timestamp);
+            let date_b = parse_date_string(&b.timestamp);
             
             date_a.cmp(&date_b)
         });

@@ -1,6 +1,6 @@
 // src/cli.rs
 use crate::{NseScraper, Result};
-use chrono::{Datelike, Local, NaiveDate};
+use chrono::{Local, NaiveDate}; // Removed Datelike
 use csv::Writer;
 use std::fs::File;
 use std::io::{self, Write};
@@ -49,7 +49,7 @@ impl NseCli {
         println!("\nFetching data for {} from {} to {}...", symbol, from_date, to_date);
         
         // Get historical data
-        let mut historical = self.scraper.get_historical_data(&symbol, "EQ", &from_date, &to_date).await?;
+        let historical = self.scraper.get_historical_data(&symbol, "EQ", &from_date, &to_date).await?;
         
         // Convert to selected time frame
         let consolidated = historical.to_time_frame(time_frame_enum);
